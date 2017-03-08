@@ -308,6 +308,7 @@ Wechat commands:
   wechat material_delete [MEDIA_ID]                        # 删除永久素材
   wechat material_list [TYPE, OFFSET, COUNT]               # 获取永久素材列表
   wechat media [MEDIA_ID, PATH]                            # 媒体下载
+  wechat media_hq [MEDIA_ID, PATH]                         # 高清音频下载
   wechat media_create [MEDIA_TYPE, PATH]                   # 媒体上传
   wechat media_uploadimg [IMAGE_PATH]                      # 上传图文消息内的图片
   wechat menu                                              # 当前菜单
@@ -580,7 +581,7 @@ class WechatsController < ActionController::Base
 
   # 当请求的文字信息内容为'<n>条新闻'时, 使用这个responder处理, 并将n作为第二个参数
   on :text, with: /^(\d+)条新闻$/ do |request, count|
-    # 微信最多显示10条新闻，大于10条将只取前10条
+    # 微信最多显示8条新闻，大于8条将只取前8条
     news = (1..count.to_i).each_with_object([]) { |n, memo| memo << { title: '新闻标题', content: "第#{n}条新闻的内容#{n.hash}" } }
     request.reply.news(news) do |article, n, index| # 回复"articles"
       article.item title: "#{index} #{n[:title]}", description: n[:content], pic_url: 'http://www.baidu.com/img/bdlogo.gif', url: 'http://www.baidu.com/'

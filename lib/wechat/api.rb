@@ -62,7 +62,7 @@ module Wechat
 
     def qrcode_create_limit_scene(scene_id_or_str)
       case scene_id_or_str
-      when Fixnum
+      when Integer
         post 'qrcode/create', JSON.generate(action_name: 'QR_LIMIT_SCENE',
                                             action_info: { scene: { scene_id: scene_id_or_str } })
       else
@@ -73,6 +73,10 @@ module Wechat
 
     def shorturl(long_url)
       post 'shorturl', JSON.generate(action: 'long2short', long_url: long_url)
+    end
+
+    def wxa_create_qrcode(path, width = 430)
+      post 'wxaapp/createwxaqrcode', JSON.generate(path: path, width: width)
     end
 
     def menu

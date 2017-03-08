@@ -201,6 +201,19 @@ RSpec.describe Wechat::Api do
     end
   end
 
+  describe '#wxa_create_qrcode' do
+    qrcode_result = { errcode: 0, errmsg: 'ok',
+                      url: 'qr_code_pic_url' }
+
+    specify 'will post wxa_create_qrcode with path, width and access_token' do
+      path = 'pages/index?query=1'
+      wxa_create_qrcode_req = { path: path, width: 430 }
+      expect(subject.client).to receive(:post)
+        .with('wxaapp/createwxaqrcode', JSON.generate(wxa_create_qrcode_req), params: { access_token: 'access_token' }).and_return(qrcode_result)
+      expect(subject.wxa_create_qrcode(path)).to eq qrcode_result
+    end
+  end
+
   describe '#menu' do
     specify 'will get menu/get with access_token' do
       menu_result = 'menu_result'
@@ -259,6 +272,17 @@ RSpec.describe Wechat::Api do
         .with('media/get', params: { access_token: 'access_token', media_id: 'media_id' },
                            as: :file).and_return(media_result)
       expect(subject.media('media_id')).to eq(media_result)
+    end
+  end
+
+  describe '#media_hq' do
+    specify 'will get media/get/jssdk with access_token and media_id at file based api endpoint as file' do
+      media_hq_result = 'raw speex file format' # http://speex.org/
+
+      expect(subject.client).to receive(:get)
+        .with('media/get/jssdk', params: { access_token: 'access_token', media_id: 'media_id' },
+                                 as: :file).and_return(media_hq_result)
+      expect(subject.media_hq('media_id')).to eq(media_hq_result)
     end
   end
 
